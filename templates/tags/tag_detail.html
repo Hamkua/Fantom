@@ -7,10 +7,10 @@
             	<div class="overlay bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0" data-background=""></div>
 				<div class="container">
 					<div class="banner_content text-center">
-						<h2>Category</h2>
+						<h2>Tag</h2>
 						<div class="page_link">
 							<a href="{% url 'index' %}">Home</a>
-							<a href="#">{{ category }}</a>
+							<a href="#">{{ tag }}</a>
 						</div>
 					</div>
 				</div>
@@ -23,11 +23,12 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
+                        <h3>For this {{ tag.title }} tag {{ tag.post_count }} post(s)</h3>
                         <div class="blog_left_sidebar">
                             {% for post in posts %}
                             <article class="blog_style1">
                             	<div class="blog_img">
-                                    {% if image %}
+                                    {% if post.image %}
                             		    <img class="img-fluid" src="{{ post.image.url }}" alt="">
                             	    {% endif %}
                                 </div>
