@@ -14,8 +14,8 @@ class Category(models.Model):
         return self.title
 
     def post_count(self):
-        # return self.posts.all().count() 와 같은 기능
-        return self.post_set.all().count()
+        return self.posts.all().count()
+        # return self.post_set.all().count() foreignkey 에서는 안되는 건가?
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
