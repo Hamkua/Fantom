@@ -10,7 +10,8 @@ class IndexView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
+        #context['categories'] = Category.objects.all()
+        context['slider_posts'] = Post.objects.all().filter(slider_post=True)
         return context
 
 
