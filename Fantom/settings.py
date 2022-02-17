@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'posts',
     'users',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'    #allauth에서 LOGIN_REDIRECT_URL
+
+#crispy_form의 스타일을 설정
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

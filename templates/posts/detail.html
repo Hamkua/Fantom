@@ -24,8 +24,10 @@
                 <div class="row">
                     <div class="col-lg-8">
        					<div class="main_blog_details">
+                            {% if single.image %}
        						<img class="img-fluid" src="{{ single.image.url }}" alt="">
-       						<a href="#"><h4>Cartridge Is Better Than Ever <br /> A Discount Toner</h4></a>
+       						{% endif %}
+                            <a href="#"><h4>Cartridge Is Better Than Ever <br /> A Discount Toner</h4></a>
        						<div class="user_details">
        							<div class="float-left">
        								<a href="#">Lifestyle</a>
