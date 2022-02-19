@@ -6,9 +6,10 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import FormMixin
 
 from .models import Post, Category, Tag
-from .forms import PostCreationForm, PostUpdateForm
+from .forms import PostCreationForm, PostUpdateForm, CreateCommentForm
 
 from braces.views import LoginRequiredMixin, UserPassesTestMixin
 # Create your views here.
@@ -27,10 +28,11 @@ class IndexView(ListView):
         return context
 
 
-class PostDetail(DetailView):
+class PostDetail(DetailView, FormMixin):
     model = Post
     template_name = 'posts/detail.html'
     context_object_name = 'single'
+    form_class = CreateCommentForm
 
     def get(self, request, *args, **kwargs):
         self.hit = Post.objects.filter(id=self.kwargs['pk']).update(hit=F('hit')+1)
@@ -40,8 +42,29 @@ class PostDetail(DetailView):
         context = super(PostDetail, self).get_context_data(**kwargs)
         context['previous'] = Post.objects.all().filter(id__lt=self.kwargs['pk']).order_by('-pk').first()
         context['next'] = Post.objects.all().filter(id__gt=self.kwargs['pk']).order_by('pk').first()
+        context['form'] = self.get_form()
         return context
 
+    def form_valid(self, form):
+        form.instance.post = self.object    #detailview이기 때문에, object
+        form.save()
+        return super().form_valid(form)
+
+    # post 메서드, 소스코드 https://github.com/django/django/blob/3.0/django/views/generic/base.py#L30
+    # def post(self, request, *args, **kwargs):
+    #     return self.get(request, *args, **kwargs)
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+
+            #form_valid(self, form) If the form is valid, redirect to the supplied URL, get_success_url메서드를 리턴함.
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'pk':self.object.pk, 'slug':self.object.slug})
 
 class CategoryDetail(ListView):
     model = Post

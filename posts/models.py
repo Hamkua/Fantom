@@ -46,7 +46,6 @@ class Post(models.Model):
     hit = models.PositiveIntegerField(default=0)    # 음수로 지정될 수 없는 정수형 필드
 
 
-
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args,**kwargs)
@@ -56,6 +55,9 @@ class Post(models.Model):
 
     def post_tag(self):
         return ','.join(str(tag) for tag in self.tag.all())
+
+    def comment_count(self):
+        return self.comments.all().count()
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")

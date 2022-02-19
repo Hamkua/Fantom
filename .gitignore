@@ -114,3 +114,5 @@ dmypy.json
 .pyre/
 
 migrations/
+
+my_settings.py
