@@ -45,7 +45,9 @@
                             	</div>
                             	<div class="blog_text">
 									<div class="blog_text_inner">
-										<a class="cat" href="#">Gadgets</a>
+                                        {% for tag in post.tag.all %}
+										<a class="cat" href="{% url 'tag_detail' tag.slug %}">{{ tag }}</a>
+                                        {% endfor %}
 										<a href="{% url 'detail' pk=post.pk slug=post.slug %}"><h4>{{ post.title }}</h4></a>
 										<p>{{ post.content|truncatechars:175 }}</p>
 										<div class="date">
@@ -56,29 +58,55 @@
                             	</div>
                             </article>
                             {% endfor %}
+                            {% if is_paginated %}
                             <nav class="blog-pagination justify-content-center d-flex">
 		                        <ul class="pagination">
+                                    {% if page_obj.has_previous %}
 		                            <li class="page-item">
-		                                <a href="#" class="page-link" aria-label="Previous">
+		                                <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
 		                                    <span aria-hidden="true">
 		                                        <span class="lnr lnr-chevron-left"></span>
 		                                    </span>
 		                                </a>
 		                            </li>
-		                            <li class="page-item"><a href="#" class="page-link">01</a></li>
-		                            <li class="page-item active"><a href="#" class="page-link">02</a></li>
-		                            <li class="page-item"><a href="#" class="page-link">03</a></li>
-		                            <li class="page-item"><a href="#" class="page-link">04</a></li>
-		                            <li class="page-item"><a href="#" class="page-link">09</a></li>
+                                        {% else %}
+                                        <li class="page-item disabled">
+		                                <a href="" class="page-link" aria-label="Previous">
+		                                    <span aria-hidden="true">
+		                                        <span class="lnr lnr-chevron-left"></span>
+		                                    </span>
+		                                </a>
+		                            </li>
+                                    {% endif %}
+
+                                    {% for i in paginator.page_range  %}
+                                    {% if page_obj.number == i %}
+                                        <li class="page-item active"><a href="#" class="page-link">{{ i }}</a></li>
+                                    {% else %}
+		                            <li class="page-item"><a href="?page={{ i }}" class="page-link">{{ i }}</a></li>
+		                            {% endif %}
+                                    {% endfor %}
+
+                                    {% if page_obj.has_next %}
 		                            <li class="page-item">
-		                                <a href="#" class="page-link" aria-label="Next">
+		                                <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
 		                                    <span aria-hidden="true">
 		                                        <span class="lnr lnr-chevron-right"></span>
 		                                    </span>
 		                                </a>
 		                            </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+		                                <a href="#" class="page-link " aria-label="Next">
+		                                    <span aria-hidden="true">
+		                                        <span class="lnr lnr-chevron-right"></span>
+		                                    </span>
+		                                </a>
+		                                </li>
+                                    {% endif %}
 		                        </ul>
 		                    </nav>
+                            {% endif %}
                         </div>
                     </div>
                 {% include 'right_side.html' %}

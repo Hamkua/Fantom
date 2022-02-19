@@ -137,3 +137,5 @@ LOGIN_REDIRECT_URL = '/'    #allauth에서 LOGIN_REDIRECT_URL
 
 #crispy_form의 스타일을 설정
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_URL = '/'

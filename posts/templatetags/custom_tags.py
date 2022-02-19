@@ -1,5 +1,5 @@
 from django import template
-from posts.models import Category, Tag
+from posts.models import Category, Tag, Post
 
 register = template.Library()
 
@@ -10,3 +10,7 @@ def all_categories():
 @register.simple_tag(name='tags')
 def all_tags():
     return Tag.objects.all()
+
+@register.simple_tag(name='hit_posts')
+def hit_posts():
+    return Post.objects.all().order_by('-hit')[:5]

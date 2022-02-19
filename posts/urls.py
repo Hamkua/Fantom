@@ -8,4 +8,6 @@ urlpatterns = [
     path('tag/<slug:slug>/', TagDetail.as_view(), name='tag_detail'),
     path('post-create/', CreatePostView.as_view(), name='create_post'),
     path('post-update/<int:pk>/<slug:slug>/', UpdatePostView.as_view(), name='post_update'),
+    path('post-delete/<int:pk>/<slug:slug>/', DeletePostView.as_view(), name='post_delete'),
+    path('search/', SearchView.as_view(), name="search"),
 ]

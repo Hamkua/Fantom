@@ -4,12 +4,15 @@
 <div class="col-lg-4">
                         <div class="blog_right_sidebar">
                             <aside class="single_sidebar_widget search_widget">
+                                <form action="{% url 'search' %}" method="get">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search Posts">
+                                    <input type="text" class="form-control" placeholder="Search Posts" name="q">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="button"><i class="lnr lnr-magnifier"></i></button>
                                     </span>
-                                </div><!-- /input-group -->
+                                </div>
+                                </form>
+                                    <!-- /input-group -->
                                 <div class="br"></div>
                             </aside>
                             <aside class="single_sidebar_widget author_widget">
@@ -27,34 +30,18 @@
                             </aside>
                             <aside class="single_sidebar_widget popular_post_widget">
                                 <h3 class="widget_title">Popular Posts</h3>
+                                {% hit_posts as posts %}
+                                {% for post in posts %}
                                 <div class="media post_item">
-                                    <img src="{% static 'img/blog/popular-post/post1.jpg' %}" alt="post">
+                                    {% if post.image %}
+                                    <img src="{{ post.image.url }}" style="width:100px;height:60px;" alt="post">
+                                    {% endif %}
                                     <div class="media-body">
-                                        <a href="blog-details.html"><h3>Space The Final Frontier</h3></a>
-                                        <p>02 Hours ago</p>
+                                        <a href="{% url 'detail' post.pk post.slug %}"><h3>{{ post.title }}</h3></a>
+                                        <p>Hit : {{ post.hit }}</p>
                                     </div>
                                 </div>
-                                <div class="media post_item">
-                                    <img src="{% static 'img/blog/popular-post/post2.jpg' %}" alt="post">
-                                    <div class="media-body">
-                                        <a href="blog-details.html"><h3>The Amazing Hubble</h3></a>
-                                        <p>02 Hours ago</p>
-                                    </div>
-                                </div>
-                                <div class="media post_item">
-                                    <img src="{% static 'img/blog/popular-post/post3.jpg' %}" alt="post">
-                                    <div class="media-body">
-                                        <a href="blog-details.html"><h3>Astronomy Or Astrology</h3></a>
-                                        <p>03 Hours ago</p>
-                                    </div>
-                                </div>
-                                <div class="media post_item">
-                                    <img src="{% static 'img/blog/popular-post/post4.jpg' %}" alt="post">
-                                    <div class="media-body">
-                                        <a href="blog-details.html"><h3>Asteroids telescope</h3></a>
-                                        <p>01 Hours ago</p>
-                                    </div>
-                                </div>
+                                {% endfor %}
                                 <div class="br"></div>
                             </aside>
                             <aside class="single_sidebar_widget">
