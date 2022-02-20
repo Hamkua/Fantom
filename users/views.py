@@ -1,11 +1,14 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
+
+from posts.models import Post
 from .forms import RegisterForm, UserProfileForm
 from .models import UserProfile
 
@@ -28,10 +31,13 @@ class UserLogoutView(LogoutView):
 
 # braces의 Mixin을 사용해보았다. 강의에서는 get메서드를 오버라이드하여 구현.
 #@method_decorator(login_required(login_url='users/login'), name="dispatch")
-class UserProfileUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
+class UserProfileUpdateView(LoginRequiredMixin,UserPassesTestMixin,SuccessMessageMixin, UpdateView):
     model = UserProfile
     template_name = 'users/profile-update.html'
     form_class = UserProfileForm
+
+    success_message = 'Your Profile Has Been Updated!!!'
+
 
     redirect_unauthenticated_users = True
     raise_exception = True
@@ -54,3 +60,39 @@ class UserProfileUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('users:update_profile', kwargs={"slug":self.object.slug})
+
+@method_decorator(login_required(login_url='users/login'), name="dispatch")
+class UserProfileView(ListView):
+    model = Post
+    template_name = 'users/my-profile.html'
+    context_object_name = 'userposts'
+
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['userprofile'] = UserProfile.objects.get(user=self.request.user)
+        return context
+
+    def get_queryset(self):
+        return Post.objects.filter(user=self.request.user).order_by('-publishing_date')
+
+
+class UserPostView(ListView):
+    template_name = 'users/user-post.html'
+    model = Post
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Post.objects.filter(user=self.kwargs['pk'])    #self.kwargs.get('pk')
+
+class UserListView(ListView):
+    template_name = 'users/user-list.html'
+    model = UserProfile
+    context_object_name = 'profiles'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

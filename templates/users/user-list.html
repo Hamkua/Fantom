@@ -23,28 +23,15 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
-                        <div class="blog_left_sidebar">
-                            {% for post in posts %}
-                            <article class="blog_style1">
-                            	<div class="blog_img">
-                                    {% if image %}
-                            		    <img class="img-fluid" src="{{ post.image.url }}" style="width: 100%;" alt="">
-                            	    {% endif %}
-                                </div>
-                            	<div class="blog_text">
-									<div class="blog_text_inner">
-										{% for tag in single.tag.all %}
-       								        <a href="{% url 'tag_detail' tag.slug %}">{{ tag }}</a>
-                                        {% endfor %}
-										<a href="{% url 'detail' pk=post.pk slug=post.slug %}"><h4>{{ post.title }}</h4></a>
-										<p>{{ post.content|truncatechars:150 }}</p>
-										<div class="date">
-											<a href="#"><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.publishing_date }}</a>
-											<a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 05</a>
-										</div>
-									</div>
-                            	</div>
-                            </article>
+                        <div class="blog_left_sidebar" style="text-align:center;">
+                            {% for profile in profiles %}
+                            <div class="container" style="border-style:solid;border-width:2px;border-color:green;margin-bottom:5px;">
+                                <img src="{{ profile.image.url }}">
+                                <a href="{% url 'users:user_posts' pk=profile.user.pk %}"><h4>{{ profile.user.username }}</h4></a>
+                                <p>{{ profile.bio }}</p>
+                                <p>{{ profile.birth_day }}</p>
+
+                            </div>
                             {% endfor %}
                             {% if is_paginated %}
                             <nav class="blog-pagination justify-content-center d-flex">
