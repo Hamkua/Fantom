@@ -114,5 +114,7 @@ dmypy.json
 .pyre/
 
 migrations/
+media/users
+media/uploads
 
 my_settings.py
